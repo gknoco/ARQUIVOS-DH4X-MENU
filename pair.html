@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<title>Pareamento Wi-Fi</title>
+<style>
+:root{--pink:#ff69b4;--dim:#a992c0;--line:rgba(255,105,180,.28)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:transparent;overflow:hidden;
+ font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#f2e8fb;
+ user-select:none;-webkit-user-select:none}
+#win{position:absolute;inset:0;display:flex;flex-direction:column;
+ background:rgba(18,12,26,.985);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+ box-shadow:0 14px 40px rgba(0,0,0,.65)}
+#head{flex:none;display:flex;align-items:center;gap:8px;padding:10px 12px;
+ background:linear-gradient(180deg,#2a1a36,#1b1224);border-bottom:1px solid rgba(255,255,255,.07);
+ touch-action:none;cursor:grab}
+.dots{display:flex;gap:6px}
+.dots i{width:11px;height:11px;border-radius:50%}
+.dots i:nth-child(1){background:#ff5f57}
+.dots i:nth-child(2){background:#ffbd2e}
+.dots i:nth-child(3){background:#28c840}
+#title{flex:1;text-align:center;font-size:13px;letter-spacing:.6px;color:#f4e9ff}
+.hb{background:none;border:none;color:#a992c0;font-size:15px;cursor:pointer;padding:2px 5px}
+#body{flex:1;min-height:0;padding:11px 13px 13px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+#hint{font-size:10.8px;color:var(--dim);line-height:1.5;margin:0}
+#hint b{color:#ffa8dc}
+.cap{font-size:10px;letter-spacing:1.2px;color:#c9b6dd;margin:1px 0 -2px}
+.cap b{color:var(--pink);font-size:10px}
+#code{width:100%;padding:10px;border-radius:11px;border:1.5px solid rgba(255,105,180,.35);
+ background:rgba(10,6,16,.9);color:#fff;font-size:24px;font-weight:800;letter-spacing:9px;
+ text-align:center;outline:none;font-family:monospace;transition:border-color .15s,box-shadow .15s}
+#code:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,105,180,.18)}
+#code.bad{border-color:#ff4d6d;box-shadow:0 0 0 3px rgba(255,77,109,.22);animation:sh .3s}
+#code.good{border-color:#39ff14;box-shadow:0 0 0 3px rgba(57,255,20,.22)}
+@keyframes sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.prow{display:flex;gap:6px;align-items:center}
+#porta{flex:1;min-width:0;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);
+ background:rgba(10,6,16,.9);color:#ffd9ef;font-size:14px;letter-spacing:1px;text-align:center;
+ outline:none;font-family:monospace}
+#porta:focus{border-color:var(--pink)}
+#porta.bad{border-color:#ff4d6d}
+.mini{padding:9px 10px;border-radius:9px;border:1px solid rgba(255,105,180,.3);background:transparent;
+ color:#ffa8dc;font-size:10.5px;font-weight:700;letter-spacing:.5px;cursor:pointer;flex:none}
+#pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.k{padding:10px 0;border-radius:9px;border:1px solid rgba(255,255,255,.09);
+ background:rgba(255,255,255,.05);color:#f2e8fb;font-size:16px;font-weight:700;cursor:pointer}
+.k:active{background:rgba(255,105,180,.3)}
+.k.w{font-size:10.5px;letter-spacing:.4px}
+#row{display:flex;gap:7px;margin-top:2px}
+.btn{flex:1;padding:11px;border:none;border-radius:11px;font-size:12.5px;font-weight:800;
+ letter-spacing:.8px;color:#fff;background:linear-gradient(180deg,#ff8cc8,#ff4fa3);cursor:pointer}
+.btn.g{background:linear-gradient(180deg,#8dff6e,#22d40a);color:#04160a}
+.btn.gh{background:transparent;color:#f2e8fb;border:1px solid var(--line)}
+.btn[disabled]{filter:grayscale(.85) brightness(.6);pointer-events:none}
+#msg{font-size:10.8px;min-height:14px;color:var(--dim);text-align:center;line-height:1.45}
+#msg.e{color:#ff6b85}
+#msg.g{color:#6bff8f}
+</style>
+</head>
+<body>
+<div id="win">
+  <div id="head">
+    <div class="dots"><i></i><i></i><i></i></div>
+    <div id="title">Pareamento Wi-Fi ADB</div>
+    <button class="hb" id="x">✕</button>
+  </div>
+  <div id="body">
+    <p id="hint">Em <b>Opções do desenvolvedor → Depuração sem fio → Parear com código</b>: copie o <b>código de 6 dígitos</b> e o <b>IP:porta</b> que aparecem. Pode arrastar esta janela pelo cabeçalho.</p>
+
+    <div class="cap">CÓDIGO DE PAREAMENTO <b>(6 dígitos)</b></div>
+    <input id="code" type="tel" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off"/>
+
+    <div class="cap">PORTA / IP:PORTA <b>(ex: 41169)</b></div>
+    <div class="prow">
+      <input id="porta" type="text" inputmode="text" placeholder="127.0.0.1:41169" autocomplete="off"/>
+      <button class="mini" id="bAuto">DETECTAR</button>
+    </div>
+
+    <div id="pad">
+      <button class="k" data-d="1">1</button><button class="k" data-d="2">2</button><button class="k" data-d="3">3</button>
+      <button class="k" data-d="4">4</button><button class="k" data-d="5">5</button><button class="k" data-d="6">6</button>
+      <button class="k" data-d="7">7</button><button class="k" data-d="8">8</button><button class="k" data-d="9">9</button>
+      <button class="k w" id="kCol">COLAR</button><button class="k" data-d="0">0</button><button class="k w" id="kDel">⌫</button>
+    </div>
+
+    <div id="row">
+      <button class="btn gh" id="bDev">DEV</button>
+      <button class="btn g" id="bPair" disabled>PAREAR</button>
+    </div>
+    <div id="msg">Aguardando o código de 6 dígitos...</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+var BR = "http://127.0.0.1:7777";
+function $(s){return document.querySelector(s);}
+function msg(t,c){var m=$("#msg");m.className=c||"";m.textContent=t;}
+var el=$("#code"), pt=$("#porta"), bPair=$("#bPair");
+
+function limpa(){
+  var v=el.value.replace(/\D/g,"").slice(0,6);
+  if(v!==el.value)el.value=v;
+  bPair.disabled=(v.length!==6);
+  el.classList.remove("bad","good");
+  pt.classList.remove("bad");
+}
+el.addEventListener("input",limpa);
+pt.addEventListener("input",function(){pt.classList.remove("bad");});
+
+var ks=document.querySelectorAll(".k[data-d]");
+for(var i=0;i<ks.length;i++){(function(b){
+  b.addEventListener("click",function(){
+    if(el.value.length<6){el.value+=b.getAttribute("data-d");limpa();}
+    el.focus();
+  });})(ks[i]);}
+$("#kDel").addEventListener("click",function(){el.value=el.value.slice(0,-1);limpa();el.focus();});
+
+/* ---------- colar ---------- */
+$("#kCol").addEventListener("click",function(){
+  var t="";
+  try{ if(window.FFOverlay&&FFOverlay.colar) t=String(FFOverlay.colar()||""); }catch(e){}
+  if(!t){msg("Área de transferência vazia.","e");return;}
+  var d=t.replace(/\D/g,"");
+  var mIp=t.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})[:\s](\d{2,5})/);
+  var mPo=t.match(/(?:^|\D)(\d{4,5})(?:\D|$)/);
+  if(mIp){pt.value=mIp[1]+":"+mIp[2];}
+  else if(mPo && d.length<6){pt.value=mPo[1];}
+  if(d.length>=6){
+    if(pt.value && d.length===8){
+      el.value=d.slice(0,6);
+    }else{
+      el.value=d.slice(0,6);
+    }
+    limpa();msg("Código colado.","");
+  }else if(d.length>0){
+    el.value=d.slice(0,6);limpa();msg("Colei "+d.length+" dígito(s).","");
+  }else{
+    msg("Colei a porta. Falta o código.","");
+  }
+  el.focus();
+});
+
+/* ---------- detectar porta ---------- */
+function detectar(silencioso){
+  var ok=false;
+  try{
+    fetch(BR+"/mdns",{cache:"no-store"}).then(function(r){return r.json();})
+      .then(function(j){
+        if(j && j.pair){
+          pt.value="127.0.0.1:"+j.pair;
+          if(!silencioso)msg("Porta detectada: "+j.pair,"");
+        }else if(!silencioso){
+          pt.value="";msg("Não achei a porta. Digite o IP:porta das Opções.","e");
+        }
+      }).catch(function(){
+        if(!silencioso)msg("Ponte offline. Rode ff-bridge.py no Termux.","e");
+      });
+  }catch(e){ if(!silencioso)msg("fetch indisponível.","e"); }
+  return ok;
+}
+$("#bAuto").addEventListener("click",function(){detectar(false);});
+setTimeout(function(){detectar(true);},700);
+
+/* ---------- fechar / dev ---------- */
+$("#x").addEventListener("click",function(){try{FFOverlay.fecharPareamento();}catch(e){}});
+$("#bDev").addEventListener("click",function(){try{FFOverlay.abrirDevOptions();}catch(e){}});
+
+/* ---------- parear ---------- */
+var tentando=false;
+function parear(){
+  var v=el.value.replace(/\D/g,"");
+  if(v.length!==6){msg("Faltam dígitos no código.","e");el.classList.add("bad");el.focus();return;}
+  if(tentando)return;
+
+  var p=(pt.value||"").replace(/\s/g,"");
+  if(p.indexOf(":")<0 && p.length>0) p="127.0.0.1:"+p;
+
+  tentando=true; bPair.disabled=true; bPair.textContent="...";
+  msg("Conectando a "+(p||"127.0.0.1 (auto)")+" ...","");
+
+  var url=BR+"/pair?code="+v;
+  if(p)url+="&addr="+encodeURIComponent(p);
+
+  var fim=false;
+  var to=setTimeout(function(){
+    if(fim)return; fim=true; tentando=false;
+    bPair.disabled=false; bPair.textContent="PAREAR";
+    el.classList.add("bad");
+    msg("A ponte não respondeu (30s). Rode ff-bridge.py no Termux.","e");
+  },32000);
+
+  try{
+    fetch(url,{cache:"no-store"})
+      .then(function(r){return r.text();})
+      .then(function(r){
+        if(fim)return; fim=true; clearTimeout(to); tentando=false;
+        bPair.disabled=false; bPair.textContent="PAREAR";
+        r=(r||"").trim();
+        if(r.indexOf("ok")===0){
+          el.classList.add("good");
+          msg("CONECTADO! Depuração Wi-Fi ativa.","g");
+          try{FFOverlay.sucesso();}catch(e){}
+        }else{
+          el.classList.add("bad");
+          var t=r.replace(/^err\s*/,"")||"código inválido";
+          msg("Recusado: "+t+" — tente de novo.","e");
+          try{FFOverlay.falha();}catch(e){}
+          setTimeout(function(){el.classList.remove("bad");},1700);
+          el.focus();
+        }
+      })
+      .catch(function(){
+        if(fim)return; fim=true; clearTimeout(to); tentando=false;
+        bPair.disabled=false; bPair.textContent="PAREAR";
+        el.classList.add("bad");
+        msg("Ponte offline. Inicie o ff-bridge.py no Termux.","e");
+        setTimeout(function(){el.classList.remove("bad");},1700);
+      });
+  }catch(e){
+    if(!fim){fim=true;clearTimeout(to);tentando=false;bPair.disabled=false;bPair.textContent="PAREAR";
+      el.classList.add("bad");msg("fetch indisponível.","e");}
+  }
+}
+bPair.addEventListener("click",parear);
+el.addEventListener("keydown",function(e){if(e.keyCode===13)parear();});
+pt.addEventListener("keydown",function(e){if(e.keyCode===13)parear();});
+
+window.dh4xOnOpen=function(){limpa();detectar(true);setTimeout(function(){try{el.focus();}catch(e){}},220);};
+window.dh4xOnResize=function(){};
+window.dh4xPareou=function(){el.classList.add("good");msg("CONECTADO!","g");};
+
+/* ---------- arraste nativo ---------- */
+(function(){
+  var h=$("#head"), sx=0, sy=0, on=false;
+  function st(x,y){on=true;sx=x;sy=y;try{FFOverlay.arrastarInicioPareamento();}catch(e){}}
+  function mv(x,y){if(!on)return;try{FFOverlay.arrastarPareamento(x-sx,y-sy);}catch(e){}}
+  function en(){on=false;}
+  h.addEventListener("touchstart",function(e){var t=e.touches[0];st(t.clientX,t.clientY);e.preventDefault();},{passive:false});
+  h.addEventListener("touchmove",function(e){var t=e.touches[0];mv(t.clientX,t.clientY);e.preventDefault();},{passive:false});
+  h.addEventListener("touchend",en); h.addEventListener("touchcancel",en);
+  h.addEventListener("mousedown",function(e){st(e.clientX,e.clientY);});
+  document.addEventListener("mousemove",function(e){if(on)mv(e.clientX,e.clientY);});
+  document.addEventListener("mouseup",en);
+})();
+</script>
+</body>
+</html>
