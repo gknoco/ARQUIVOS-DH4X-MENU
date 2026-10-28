@@ -1,1 +1,332 @@
-oi
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="theme-color" content="#120c1a"/>
+<title>DH4X MENU</title>
+<style>
+:root{--pink:#ff69b4;--bg:#120c1a;--bg2:#1b1224;--txt:#f2e8fb;
+ --dim:#a992c0;--line:rgba(255,105,180,.22);--ok:#39ff14;--err:#ff4d6d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);
+ background:#0a0710;background-image:radial-gradient(130% 90% at 50% -10%,#2a1436 0%,#0a0710 65%);
+ overflow:hidden;user-select:none;-webkit-user-select:none}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;padding:20px 18px 24px;
+ opacity:0;pointer-events:none;transition:opacity .22s}
+.screen.on{opacity:1;pointer-events:auto}
+.center{justify-content:center;align-items:center;text-align:center}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:16px}
+.hidden{display:none!important}
+.logoRing{width:88px;height:88px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;
+ justify-content:center;border:2px solid var(--pink);box-shadow:0 0 22px rgba(255,105,180,.35)}
+.logoRing span{font-size:26px;font-weight:800;letter-spacing:2px;color:var(--pink)}
+.logo h1{margin:0;font-size:22px;letter-spacing:5px;font-weight:800}
+.sub{margin:4px 0 22px;font-size:12px;color:var(--dim);letter-spacing:1px}
+.loginCard{width:100%;max-width:340px}
+.lbl{display:block;font-size:11px;letter-spacing:2px;color:var(--dim);margin:0 0 8px;text-align:left}
+input.minp{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);
+ background:rgba(12,8,18,.9);color:var(--txt);font-size:16px;outline:none;margin-bottom:12px}
+input.minp:focus{border-color:var(--pink)}
+.btn{width:100%;padding:14px;border:none;border-radius:11px;font-size:14px;font-weight:700;
+ letter-spacing:1.5px;color:#fff;background:linear-gradient(180deg,#ff8cc8,#ff4fa3);
+ margin-top:12px;cursor:pointer}
+.btn:active{opacity:.85}
+.btn[disabled]{filter:grayscale(.85) brightness(.62);pointer-events:none}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.btn.green{background:linear-gradient(180deg,#8dff6e,#22d40a);color:#04160a}
+.msg{font-size:12px;margin:10px 0 0;min-height:16px;color:var(--err)}
+.foot{margin-top:20px;font-size:11px;color:var(--dim);letter-spacing:1px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.top h2{margin:0;font-size:15px;letter-spacing:3px}
+.top .sp{flex:1}
+.iconBtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);
+ background:rgba(16,10,24,.9);color:var(--txt);font-size:15px;cursor:pointer}
+.st{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);padding:9px 11px;
+ border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:rgba(16,10,24,.6)}
+.st b{color:var(--txt);font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--err);flex:none}
+.dot.on{background:var(--ok);box-shadow:0 0 9px var(--ok)}
+.st .sp{flex:1}
+.mini{font-size:11px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);
+ background:transparent;color:var(--pink);cursor:pointer}
+.log{flex:1;margin-top:12px;border:1px solid var(--line);border-radius:12px;
+ background:rgba(8,5,13,.85);padding:10px;overflow-y:auto;font-size:11px;
+ font-family:monospace;line-height:1.55;color:#e3b9dd}
+.log div{white-space:pre-wrap;word-break:break-all}
+.log .e{color:#ff8fa3}.log .g{color:#8affb0}.log .a{color:#ffa8dc}
+#toast{position:absolute;left:50%;margin-left:-43%;width:86%;bottom:22px;z-index:1200;
+ background:rgba(24,14,34,.97);border:1px solid var(--line);color:var(--txt);padding:10px 14px;
+ border-radius:11px;font-size:12px;opacity:0;transition:opacity .22s;pointer-events:none;text-align:center}
+#toast.on{opacity:1}
+#modal{position:absolute;inset:0;z-index:1500;background:rgba(6,3,10,.8);
+ display:flex;align-items:center;justify-content:center;padding:20px}
+.mbox{width:100%;max-width:350px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px;
+ max-height:88vh;overflow-y:auto}
+.mbox h3{margin:0 0 6px;font-size:14px;letter-spacing:1px;color:var(--pink)}
+.mbox p{margin:0 0 12px;font-size:12px;color:var(--dim);line-height:1.5;white-space:pre-wrap}
+.mrow{display:flex;gap:8px}.mrow .btn{margin-top:0}
+</style>
+</head>
+<body>
+
+<section id="scrLogin" class="screen on center">
+  <div class="logo">
+    <div class="logoRing"><span>DH</span></div>
+    <h1>DH4X MENU</h1>
+    <p class="sub">PAINEL FREE FIRE • ANDROID</p>
+  </div>
+  <div class="card loginCard">
+    <label class="lbl">SENHA DE ACESSO</label>
+    <input id="pwd" class="minp" type="password" placeholder="••••••" autocomplete="off"/>
+    <button id="btnLogin" class="btn">ENTRAR</button>
+    <p id="loginMsg" class="msg"></p>
+  </div>
+  <p class="foot">v4.0 • patch OB55 • sem root</p>
+</section>
+
+<section id="scrHome" class="screen">
+  <div class="top">
+    <h2>DH4X MENU</h2><div class="sp"></div>
+    <button class="iconBtn" id="btnCfg">⚙</button>
+    <button class="iconBtn" id="btnOut">⏻</button>
+  </div>
+
+  <div class="st"><span class="dot" id="dAdb"></span><b>Depuração Wi-Fi</b>
+    <span class="sp"></span><span id="tAdb">desconectada</span>
+    <button class="mini" id="btnPair">PAREAR</button></div>
+
+  <div class="st"><span class="dot" id="dBridge"></span><b>Ponte ADB (7777)</b>
+    <span class="sp"></span><span id="tBridge">offline</span>
+    <button class="mini" id="btnBridge">TESTAR</button></div>
+
+  <div class="st"><span class="dot" id="dOv"></span><b>Sobrepor outros apps</b>
+    <span class="sp"></span><span id="tOv">negada</span>
+    <button class="mini" id="btnOv">CONCEDER</button></div>
+
+  <button id="btnPanel" class="btn">ABRIR PAINEL FLUTUANTE</button>
+  <button id="btnInject" class="btn green" disabled>INJETAR NO FREE FIRE</button>
+  <button id="btnDevOpts" class="btn ghost">OPÇÕES DO DESENVOLVEDOR</button>
+
+  <div class="log" id="log"></div>
+</section>
+
+<div id="toast"></div>
+<div id="modal" class="hidden"><div class="mbox">
+  <h3 id="mTitle">Título</h3><p id="mText"></p><div id="mFields"></div>
+  <div class="mrow"><button class="btn ghost" id="mCancel">CANCELAR</button>
+  <button class="btn" id="mOk">OK</button></div>
+</div></div>
+
+<script>
+"use strict";
+var NAT = !!(window.FFNative);
+var BR = "http://127.0.0.1:7777";
+var MEM = {};
+var LS = {
+  g:function(k,d){try{var v=localStorage.getItem("dhx_"+k);return v===null?d:JSON.parse(v);}
+    catch(e){return (k in MEM)?MEM[k]:d;}},
+  s:function(k,v){MEM[k]=v;try{localStorage.setItem("dhx_"+k,JSON.stringify(v));}catch(e){}}
+};
+var cfg = {senha:"123", porta:""};
+(function(){var u=LS.g("cfg",{});for(var k in u){cfg[k]=u[k];}})();
+
+function $(s){return document.querySelector(s);}
+function txt(s,v){var e=$(s);if(e)e.textContent=v;}
+function cls(s,c,on){var e=$(s);if(e)e.classList.toggle(c,!!on);}
+function toast(t){var e=$("#toast");if(!e)return;e.textContent=t;e.classList.add("on");
+  clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove("on");},2800);}
+function log(t,c){var l=$("#log");if(!l)return;var d=document.createElement("div");
+  if(c)d.className=c;var n=new Date();
+  d.textContent="["+("0"+n.getHours()).slice(-2)+":"+("0"+n.getMinutes()).slice(-2)+":"+("0"+n.getSeconds()).slice(-2)+"] "+t;
+  l.appendChild(d);l.scrollTop=l.scrollHeight;
+  while(l.childNodes.length>140)l.removeChild(l.firstChild);}
+function go(id){var a=document.querySelectorAll(".screen");
+  for(var i=0;i<a.length;i++)a[i].classList.toggle("on",a[i].id===id);}
+
+var Net = {
+  busy:false,
+  req:function(path,cb,ms){
+    if(typeof fetch!=="function"){if(cb)cb(null);return;}
+    var done=false;
+    var t=setTimeout(function(){if(!done){done=true;if(cb)cb(null);}},ms||4000);
+    try{
+      fetch(BR+path,{cache:"no-store"}).then(function(r){return r.text();})
+        .then(function(x){if(!done){done=true;clearTimeout(t);if(cb)cb(x);}})
+        .catch(function(){if(!done){done=true;clearTimeout(t);if(cb)cb(null);}});
+    }catch(e){if(!done){done=true;clearTimeout(t);if(cb)cb(null);}}
+  },
+  send:function(c){this.req("/cmd?c="+encodeURIComponent(c),null,3000);}
+};
+
+var ST = {adb:false,bridge:false,ov:false};
+function gate(){
+  var ok = ST.adb && ST.bridge && ST.ov;
+  var b=$("#btnInject"); if(b)b.disabled=!ok;
+  cls("#dAdb","on",ST.adb);   txt("#tAdb",ST.adb?"conectada":"desconectada");
+  cls("#dBridge","on",ST.bridge); txt("#tBridge",ST.bridge?"conectada":"offline");
+  cls("#dOv","on",ST.ov);     txt("#tOv",ST.ov?"concedida":"negada");
+}
+var Poll = {
+  t:null,
+  tick:function(){
+    if(Net.busy) return;
+    Net.busy = true;
+    Net.req("/status",function(r){
+      var on = (r!==null && r.indexOf("err")!==0);
+      if(on!==ST.bridge){ST.bridge=on;gate();}
+      Net.req("/adb/state",function(a){
+        var ad=(a==="ok");
+        if(ad!==ST.adb){ST.adb=ad;gate();}
+        Net.busy=false;
+      },3000);
+    },3500);
+  },
+  start:function(){var self=this;clearInterval(this.t);this.tick();
+    this.t=setInterval(function(){self.tick();},4500);}
+};
+function checkOv(){
+  try{ ST.ov = NAT ? FFNative.temSobreposicao() : true; }catch(e){ ST.ov=false; }
+  gate();
+}
+
+function ask(title,text,fields,onOk){
+  txt("#mTitle",title); txt("#mText",text||"");
+  var box=$("#mFields"); box.innerHTML="";
+  (fields||[]).forEach(function(f){
+    var l=document.createElement("label");l.className="lbl";l.textContent=f.label;
+    var i=document.createElement("input");i.className="minp";
+    i.type=f.type||"text";i.value=f.value||"";i.setAttribute("data-k",f.key);
+    if(f.num)i.setAttribute("inputmode","numeric");
+    if(f.max)i.setAttribute("maxlength",f.max);
+    box.appendChild(l);box.appendChild(i);
+  });
+  $("#modal").classList.remove("hidden");
+  var first=box.querySelector("input");
+  if(first)setTimeout(function(){try{first.focus();}catch(e){}},180);
+  $("#mOk").onclick=function(){
+    var o={};var a=box.querySelectorAll("input");
+    for(var i=0;i<a.length;i++)o[a[i].getAttribute("data-k")]=a[i].value.trim();
+    $("#modal").classList.add("hidden");if(onOk)onOk(o);};
+  $("#mCancel").onclick=function(){$("#modal").classList.add("hidden");};
+}
+
+/* ================= pareamento (2 campos) ================= */
+function parear(v, porta){
+  v=String(v||"").replace(/\D/g,"");
+  if(v.length!==6){toast("Digite os 6 dígitos");return false;}
+  var p=String(porta||"").replace(/\s/g,"");
+  if(p.indexOf(":")<0 && p.length>0) p="127.0.0.1:"+p;
+  if(p){cfg.porta=p;LS.s("cfg",cfg);}
+
+  log("Pareando"+(p?" em "+p:" (auto)")+"...","a");
+  Net.req("/pair?code="+v+(p?"&addr="+encodeURIComponent(p):""),function(r){
+    if(r && r.indexOf("ok")===0){
+      ST.adb=true;gate();log(r,"g");toast("Depuração Wi-Fi conectada!");
+    }else{
+      ST.adb=false;gate();
+      var m=(r||"ponte offline").replace(/^err\s*/,"");
+      log("Falha no pareamento: "+m,"e");toast("Não pareou: "+m);
+    }
+  },32000);
+  return true;
+}
+
+$("#btnPair").addEventListener("click",function(){
+  if(NAT){
+    try{FFNative.abrirPareamento();log("Abrindo janela flutuante de pareamento...","a");return;}catch(e){}
+  }
+  ask("Parear depuração Wi-Fi",
+      "Em Opções do desenvolvedor → Depuração sem fio → Parear com código, copie o CÓDIGO e o IP:PORTA.",
+      [{key:"code",label:"CÓDIGO (6 dígitos)",num:true,max:6},
+       {key:"porta",label:"PORTA / IP:PORTA (ex: 41169)",value:cfg.porta}],
+      function(v){parear(v.code,v.porta);});
+});
+window.dh4xPareou=function(){ST.adb=true;gate();toast("Depuração conectada!");};
+
+$("#btnBridge").addEventListener("click",function(){Poll.tick();toast("Testando ponte...");});
+$("#btnOv").addEventListener("click",function(){
+  if(NAT)try{FFNative.pedirSobreposicao();}catch(e){}
+  setTimeout(checkOv,1200);
+});
+$("#btnDevOpts").addEventListener("click",function(){
+  if(NAT)try{FFNative.abrirDevOptions();}catch(e){}
+});
+$("#btnPanel").addEventListener("click",function(){
+  if(!NAT){toast("Somente no app");return;}
+  if(!ST.ov){FFNative.pedirSobreposicao();setTimeout(function(){toast("Conceda 'Sobrepor outros apps'");},900);return;}
+  try{FFNative.abrirPainel();log("Painel flutuante aberto.","g");}catch(e){}
+});
+
+/* ================= INJEÇÃO SINCRONIZADA ================= */
+var injetando = false;
+function inject(){
+  if(injetando) return;
+  if($("#btnInject").disabled){toast("Complete as 3 etapas primeiro");return;}
+  injetando = true;
+  var b=$("#btnInject"); b.textContent="PREPARANDO...";
+  log("Preparando injeção (patch OB55)...","a");
+
+  Net.req("/prep",function(){
+    Net.req("/inject",function(r){
+      if(!r || r.indexOf("ok")!==0){
+        injetando=false; b.textContent="INJETAR NO FREE FIRE";
+        log("Injeção falhou: "+(r||"ponte offline"),"e");
+        toast("Falhou: "+((r||"ponte offline").replace(/^err\s*/,"")));
+        return;
+      }
+      log(r,"g");
+      b.textContent="ABRINDO O JOGO...";
+      toast("Abrindo Free Fire, aguarde o carregamento...");
+      try{ FFNative.injetar(); }catch(e){
+        injetando=false; b.textContent="INJETAR NO FREE FIRE";
+      }
+      log("Sincronizando com a splash do jogo...","a");
+    },30000);
+  },15000);
+}
+$("#btnInject").addEventListener("click",inject);
+
+window.dh4xOnSync=function(estado){
+  var b=$("#btnInject");
+  if(estado===1){ b.textContent="ABRINDO O JOGO..."; log("Jogo iniciando...","a"); }
+  if(estado===2){ b.textContent="CARREGANDO...";   log("Aguardando a tela de carregamento...","a"); }
+  if(estado===3){
+    b.textContent="INJETADO • TOQUE NO CÍRCULO DH";
+    b.disabled=true;
+    injetando=true;
+    log("INJETADO! Círculo DH liberado sobre o jogo.","g");
+    toast("Injetado! Toque no círculo DH");
+  }
+};
+
+$("#btnCfg").addEventListener("click",function(){
+  ask("Configurações","Senha do app e porta padrão de pareamento.",
+    [{key:"s",label:"SENHA",value:cfg.senha},
+     {key:"p",label:"PORTA PADRÃO (opcional)",value:cfg.porta}],function(v){
+      if(v.s)cfg.senha=v.s;
+      cfg.porta=v.p||"";
+      LS.s("cfg",cfg);toast("Salvo");
+    });
+});
+$("#btnOut").addEventListener("click",function(){
+  go("scrLogin");$("#pwd").value="";
+});
+
+$("#btnLogin").addEventListener("click",function(){
+  if($("#pwd").value===cfg.senha){
+    txt("#loginMsg","");go("scrHome");log("Logado.","g");
+    Poll.start();checkOv();
+  }else{txt("#loginMsg","Senha incorreta.");}
+});
+$("#pwd").addEventListener("keydown",function(e){if(e.keyCode===13)$("#btnLogin").click();});
+
+window.dh4xOnFocus=function(){checkOv();};
+window.dh4xOnResize=function(){};
+window.addEventListener("resize",function(){checkOv();});
+
+setTimeout(function(){checkOv();},600);
+</script>
+</body>
+</html>
